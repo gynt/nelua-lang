@@ -13,15 +13,15 @@ jobs:
         include:
         - os: ubuntu-latest
           cc: musl-gcc
-          cflags: -O2 -flto -fno-plt
+          cflags: -O2 -flto -fno-plt -m32
           pkgext: .tar.xz
         - os: macos-latest
           cc: clang
-          cflags: -O2 -flto -fno-plt
+          cflags: -O2 -flto -fno-plt -m32
           pkgext: .tar.xz
         - os: windows-latest
           cc: gcc
-          cflags: -O2
+          cflags: -O2 -m32
           pkgext: .zip
     runs-on: ${{matrix.os}}
     steps:
