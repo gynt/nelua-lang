@@ -35,6 +35,7 @@ jobs:
     - name: Set up MinGW uninstall 64 bit
       shell: pwsh
       run: choco uninstall mingw
+      if: ${{ matrix.os == 'windows-latest' }}
     - name: Set up MinGW
       if: ${{ matrix.os == 'windows-latest' }}
       uses: egor-tensin/setup-mingw@v2
