@@ -17,7 +17,7 @@ jobs:
           pkgext: .tar.xz
         - os: macos-latest
           cc: clang
-          cflags: -O2 -flto -fno-plt -m32
+          cflags: -O2 -flto -fno-plt
           pkgext: .tar.xz
         - os: windows-latest
           cc: gcc
