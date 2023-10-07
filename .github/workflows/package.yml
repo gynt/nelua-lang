@@ -37,6 +37,7 @@ jobs:
       uses: egor-tensin/setup-mingw@v2
       with:
         platform: x32
+        version: 12.2.0
     - name: Package
       shell: bash
       run: make package CC=${{matrix.cc}} CFLAGS="${{matrix.cflags}}"
