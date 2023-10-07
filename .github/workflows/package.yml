@@ -9,7 +9,7 @@ jobs:
   package:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-2019]
         include:
         - os: ubuntu-latest
           cc: musl-gcc
@@ -32,16 +32,11 @@ jobs:
       if: ${{ matrix.os == 'ubuntu-latest' }}
       run: sudo apt-get update && sudo apt-get install musl-tools
 
-    - name: Set up MinGW uninstall 64 bit
-      shell: pwsh
-      run: choco uninstall mingw
-      if: ${{ matrix.os == 'windows-latest' }}
     - name: Set up MinGW
-      if: ${{ matrix.os == 'windows-latest' }}
+      if: ${{ matrix.os == 'windows-2019' }}
       uses: egor-tensin/setup-mingw@v2
       with:
         platform: x32
-        version: 12.2.0
     - name: Package
       shell: bash
       run: make package CC=${{matrix.cc}} CFLAGS="${{matrix.cflags}}"
