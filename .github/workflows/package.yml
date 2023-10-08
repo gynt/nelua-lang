@@ -50,8 +50,8 @@ jobs:
       if: ${{ matrix.os == 'windows-latest' }}
       shell: pwsh
       run: |
-        $PKGDIR = pkg
-        $PKGNAME = nelua-windows-x86-latest
+        $PKGDIR = "pkg"
+        $PKGNAME = "nelua-windows-x86-latest"
         
         del /Q /S "${PKGDIR}/${PKGNAME}"
         mkdir "${PKGDIR}"
