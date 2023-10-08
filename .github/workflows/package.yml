@@ -9,7 +9,7 @@ jobs:
   package:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-2019]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         include:
         - os: ubuntu-latest
           cc: musl-gcc
@@ -19,7 +19,7 @@ jobs:
           cc: clang
           cflags: -O2 -flto -fno-plt
           pkgext: .tar.xz
-        - os: windows-2019
+        - os: windows-latest
           cc: gcc
           cflags: -O2 -m32
           pkgext: .zip
@@ -32,19 +32,39 @@ jobs:
       if: ${{ matrix.os == 'ubuntu-latest' }}
       run: sudo apt-get update && sudo apt-get install musl-tools
 
-    - name: Remove MinGW 64 completely
-      if: ${{ matrix.os == 'windows-2019' }}
-      run: rm -rf C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64
+    - name: Prepare with cmake
+      if: ${{ matrix.os == 'windows-latest' }}
+      run: cmake -S "." -B "build" -G "Visual Studio 17 2022" -A "Win32"
       
-    - name: Set up MinGW
-      if: ${{ matrix.os == 'windows-2019' }}
-      uses: egor-tensin/setup-mingw@v2
-      with:
-        platform: x32
-        version: 12.2.0
+    - name: Build with cmake
+      if: ${{ matrix.os == 'windows-latest' }}
+      run: cmake --build build --config Release
+        
     - name: Package
       shell: bash
       run: make package CC=${{matrix.cc}} CFLAGS="${{matrix.cflags}}"
+      if: ${{ matrix.os != 'windows-latest' }}
+      
+    - name: Package (windows)
+      shell: pwsh
+      run: |
+        $PKGDIR = pkg
+        $PKGNAME = nelua-windows-x86-latest
+        
+        del /Q /S "${PKGDIR}/${PKGNAME}"
+        mkdir "${PKGDIR}"
+        mkdir "${PKGDIR}/${PKGNAME}"
+        cp -r lib "${PKGDIR}/${PKGNAME}/lib"
+        cp -r lualib "${PKGDIR}/${PKGNAME}/lualib"
+        # ${MAKE} --no-print-directory install-version-patch PREFIX_LIB_NELUA="${PKGDIR}/${PKGNAME}"
+        cp LICENSE "${PKGDIR}/${PKGNAME}/LICENSE"
+        
+        cp nelua.bat "${PKGDIR}/${PKGNAME}/nelua.bat"
+        # ${INSTALL_EXE} nelua-lua.exe "${PKGDIR}/${PKGNAME}/nelua-dll.exe"
+        cp Release/nelua-*.exe "${PKGDIR}/${PKGNAME}/"
+        cp Release/nelua-*.dll "${PKGDIR}/${PKGNAME}/"
+        del /Q "${PKGDIR}/${PKGNAME}.zip"
+        cd ${PKGDIR}; 7z a -mm=Deflate -mx=9 "${PKGNAME}.zip" "${PKGNAME}"
     - name: Adjust variables
       shell: bash
       id: pkgvars
