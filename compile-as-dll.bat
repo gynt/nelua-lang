@@ -1,0 +1,1 @@
+gcc -DMAXRECLEVEL=400 -DLUA_USE_RPMALLOC -DNDEBUG -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS  -Isrc/lua -O2 -O2 -m32 src/hasher.c src/lfs.c src/luainit.c src/onelua.c src/sys.c src/lpeglabel/lplcap.c src/lpeglabel/lplcode.c src/lpeglabel/lplprint.c src/lpeglabel/lpltree.c src/lpeglabel/lplvm.c src/srpmalloc/srpmalloc.c -o nelua-lua.dll -shared
