@@ -53,7 +53,7 @@ jobs:
         $PKGDIR = "pkg"
         $PKGNAME = "nelua-windows-x86-latest"
         
-        del /Q /S "${PKGDIR}/${PKGNAME}"
+        rm -r "${PKGDIR}/${PKGNAME}"
         mkdir "${PKGDIR}"
         mkdir "${PKGDIR}/${PKGNAME}"
         cp -r lib "${PKGDIR}/${PKGNAME}/lib"
@@ -65,7 +65,7 @@ jobs:
         # ${INSTALL_EXE} nelua-lua.exe "${PKGDIR}/${PKGNAME}/nelua-dll.exe"
         cp Release/nelua-*.exe "${PKGDIR}/${PKGNAME}/"
         cp Release/nelua-*.dll "${PKGDIR}/${PKGNAME}/"
-        del /Q "${PKGDIR}/${PKGNAME}.zip"
+        rm "${PKGDIR}/${PKGNAME}.zip"
         cd ${PKGDIR}; 7z a -mm=Deflate -mx=9 "${PKGNAME}.zip" "${PKGNAME}"
     - name: Adjust variables
       shell: bash
